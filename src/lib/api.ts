@@ -2,8 +2,10 @@
 import { getToken } from "./auth";
 
 
+const BASE_URL = "https://medication-management-backend-cang.onrender.com";
+
 export const fetchMedications = async () => {
-  const res = await fetch("http://localhost:5000/api/medications", {
+  const res = await fetch(`${BASE_URL}/api/medications`, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
@@ -29,12 +31,12 @@ export const markMedicationAsTaken = async (
     formData.append("proof", imageFile);
   }
 
-  const res = await fetch("http://localhost:5000/api/medications/mark-taken", {
+  const res = await fetch(`${BASE_URL}/api/medications/mark-taken`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
-    body: formData, // no Content-Type; browser sets it automatically
+    body: formData,
   });
 
   if (!res.ok) {
