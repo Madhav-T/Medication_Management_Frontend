@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchMedications } from "@/lib/api"; // you'll create this next
 import { getToken } from "@/lib/auth"; // or "@/utils/auth" depending on your path
 import { useQueryClient } from "@tanstack/react-query";
-
+import { API_BASE_URL } from "@/lib/api";
 
 
 
@@ -45,7 +45,7 @@ const PatientDashboard = () => {
         formData.append("proof", imageFile);
       }
 
-      await fetch("http://localhost:5000/api/medications/mark-taken", {
+      await fetch(`${API_BASE_URL}/api/medications/mark-taken`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getToken()}`
