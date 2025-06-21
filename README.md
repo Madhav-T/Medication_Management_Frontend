@@ -75,3 +75,26 @@ Deploy to Vercel/Netlify
 - State management approach
 - Performance considerations (unnecessary re-renders)
 - Security awareness (input sanitization)
+
+# Medication Management System
+
+## 🚀 Overview
+An app to help patients and caretakers manage medications.
+
+## 🛠️ Tech Stack
+React (Vite) · Node.js · SQLite · Tailwind CSS · React Query · Vitest
+
+## 🧑‍💻 Features
+- Role-based Dashboards
+- Medication CRUD
+- SQLite Auth (Login/Signup)
+- File Upload (optional)
+
+## ⚙️ Local Setup
+
+### Frontend
+```bash
+cd madhav-t-medication_management_frontend
+npm install
+cp .env.example .env # then fill your backend URL
+npm run dev

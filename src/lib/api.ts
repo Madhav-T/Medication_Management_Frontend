@@ -46,3 +46,7 @@ export const markMedicationAsTaken = async (
 
   return res.json();
 };
+
+export const API_BASE_URL = "https://medication-management-backend-cang.onrender.com";
+
+// existing functions like fetchMedications and markMedicationAsTaken can remain here
