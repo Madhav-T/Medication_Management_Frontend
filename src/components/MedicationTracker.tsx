@@ -11,9 +11,11 @@ interface MedicationTrackerProps {
   isTaken: boolean;
   onMarkTaken: (date: string, imageFile?: File) => void;
   isToday: boolean;
+  proofImage?: string | null;  // ✅ Add this prop
 }
 
-const MedicationTracker = ({ date, isTaken, onMarkTaken, isToday }: MedicationTrackerProps) => {
+
+const MedicationTracker = ({ date, isTaken, onMarkTaken, isToday, proofImage }: MedicationTrackerProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +45,7 @@ const MedicationTracker = ({ date, isTaken, onMarkTaken, isToday }: MedicationTr
   };
 
   if (isTaken) {
+  
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-center p-8 bg-green-50 rounded-xl border-2 border-green-200">
@@ -56,8 +59,17 @@ const MedicationTracker = ({ date, isTaken, onMarkTaken, isToday }: MedicationTr
             <p className="text-green-600">
               Great job! You've taken your medication for {format(new Date(date), 'MMMM d, yyyy')}.
             </p>
+
+            {proofImage && (
+              <img
+                src={`http://localhost:5000/uploads/${proofImage}`}
+                alt="Uploaded proof"
+                className="mt-4 max-w-xs rounded-md border mx-auto"
+              />
+            )}
           </div>
         </div>
+
         
         <Card className="border-green-200 bg-green-50/50">
           <CardContent className="flex items-center justify-between p-4">

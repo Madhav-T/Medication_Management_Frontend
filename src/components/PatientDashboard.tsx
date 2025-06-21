@@ -7,10 +7,28 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Calendar as CalendarIcon, Image, User } from "lucide-react";
 import MedicationTracker from "./MedicationTracker";
 import { format, isToday, isBefore, startOfDay } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMedications } from "@/lib/api"; // you'll create this next
+import { getToken } from "@/lib/auth"; // or "@/utils/auth" depending on your path
+import { useQueryClient } from "@tanstack/react-query";
+
+
+
 
 const PatientDashboard = () => {
+  const queryClient = useQueryClient();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [takenDates, setTakenDates] = useState<Set<string>>(new Set());
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["medications"],
+    queryFn: fetchMedications,
+  });
+
+  const takenDates = new Set(
+    data?.flatMap((med: any) =>
+      JSON.parse(med.taken_dates || "[]")
+    ) || []
+  );
+
 
   const today = new Date();
   const todayStr = format(today, 'yyyy-MM-dd');
@@ -18,13 +36,32 @@ const PatientDashboard = () => {
   const isTodaySelected = isToday(selectedDate);
   const isSelectedDateTaken = takenDates.has(selectedDateStr);
 
-  const handleMarkTaken = (date: string, imageFile?: File) => {
-    setTakenDates(prev => new Set(prev).add(date));
-    console.log('Medication marked as taken for:', date);
-    if (imageFile) {
-      console.log('Proof image uploaded:', imageFile.name);
+  const handleMarkTaken = async (date: string, imageFile?: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("date", date);
+      formData.append("medId", data[0].id);
+      if (imageFile) {
+        formData.append("proof", imageFile);
+      }
+
+      await fetch("http://localhost:5000/api/medications/mark-taken", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        },
+        body: formData,
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["medications"] }); // ✅ Now works
+    } catch (err) {
+      console.error("Error marking taken:", err);
     }
   };
+
+
+
+
 
   const getStreakCount = () => {
     let streak = 0;
